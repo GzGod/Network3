@@ -86,13 +86,13 @@ run_node_command() {
     fi
 }
 
-
-show_orange " .__   __. .___________. __  ___  ____ " && sleep 0.2
-show_orange " |  \ |  | |           ||  |/  / |___ \ " && sleep 0.2
-show_orange " |   \|  |  ---|  |---- |  '  /    __) | " && sleep 0.2
-show_orange " |  .    |     |  |     |    <    |__ < " && sleep 0.2
-show_orange " |  |\   |     |  |     |  .  \   ___) | " && sleep 0.2
-show_orange " |__| \__|     |__|     |__|\__\ |____/ " && sleep 0.2
+show_orange " ┏━┓┏━┳┓╋┏┳━━━┳━━━┳━━━┳━━━┓" && sleep 0.2
+show_orange " ┗┓┗┛┏┫┃╋┃┃┏━━┫┏━┓┃┏━┓┃┏━┓┃" && sleep 0.2
+show_orange " ╋┗┓┏┛┃┃╋┃┃┗━━┫┃╋┗┫┃╋┃┃┃╋┃┃ " && sleep 0.2
+show_orange " ╋┏┛┗┓┃┃╋┃┃┏━━┫┃┏━┫┗━┛┃┃╋┃┃ " && sleep 0.2
+show_orange " ┏┛┏┓┗┫┗━┛┃┗━━┫┗┻━┃┏━┓┃┗━┛┃ " && sleep 0.2
+show_orange " ┗━┛┗━┻━━━┻━━━┻━━━┻┛╋┗┻━━━┛" && sleep 0.2
+show_orange " 我的推特雪糕战神@Hy78516012，免费开源请勿相信收费！" && sleep 0.2
 echo
 sleep 1
 
