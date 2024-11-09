@@ -1,72 +1,186 @@
 #!/bin/bash
 
-# 初始化
-clear
+tput reset
+tput civis
 
-# 定义颜色显示函数
-绿色文本() { echo -e "\e[32m$1\e[0m"; }
-红色文本() { echo -e "\e[31m$1\e[0m"; }
-黄色文本() { echo -e "\e[33m$1\e[0m"; }
-蓝色文本() { echo -e "\e[34m$1\e[0m"; }
+INSTALLATION_PATH="$HOME/blockmesh"
 
-# 辅助函数
-执行命令() {
-  echo -e "$(黄色文本 "执行命令：") $(蓝色文本 "$1")"
-  eval $1
-  local 状态=$?
-  if [ $状态 -ne 0 ]; then
-    echo -e "$(红色文本 "命令执行失败，退出代码：$状态")"
-    exit $状态
-  fi
+show_orange() {
+    echo -e "\e[33m$1\e[0m"
 }
 
-# 欢迎信息
-显示欢迎信息() {
-  echo -e "$(绿色文本 "欢迎使用 Network3 节点管理脚本")"
-  echo -e "$(绿色文本 "请选择一个选项：")"
+show_blue() {
+    echo -e "\e[34m$1\e[0m"
 }
 
-# 主菜单循环
-主菜单() {
-  while true; do
-    显示欢迎信息
-    echo -e "$(绿色文本 "1) 安装节点")"
-    echo -e "$(绿色文本 "2) 启动节点")"
-    echo -e "$(绿色文本 "3) 停止节点")"
-    echo -e "$(绿色文本 "4) 检查节点状态")"
-    echo -e "$(绿色文本 "5) 更新节点")"
-    echo -e "$(绿色文本 "6) 退出")"
-    echo -n "$(黄色文本 "请输入选项：")"
-    read 选项
-    case $选项 in
-      1)
-        执行命令 "echo 安装节点的命令"
-        ;;
-      2)
-        执行命令 "echo 启动节点的命令"
-        ;;
-      3)
-        执行命令 "echo 停止节点的命令"
-        ;;
-      4)
-        执行命令 "echo 检查节点状态的命令"
-        ;;
-      5)
-        执行命令 "echo 更新节点的命令"
-        ;;
-      6)
-        echo -e "$(绿色文本 "退出脚本。")"
+show_green() {
+    echo -e "\e[32m$1\e[0m"
+}
+
+show_red() {
+    echo -e "\e[31m$1\e[0m"
+}
+
+exit_script() {
+    show_red "脚本已停止"
+        echo ""
         exit 0
-        ;;
-      *)
-        echo -e "$(红色文本 "无效的选项，请重新输入。")"
-        ;;
-    esac
-    echo -e "$(黄色文本 "按任意键返回主菜单...")"
-    read -n 1
-    clear
-  done
 }
 
-# 运行主菜单
-主菜单
+incorrect_option () {
+    echo ""
+    show_red "无效的选项。请选择可用的选项。"
+    echo ""
+}
+
+process_notification() {
+    local message="$1"
+    show_orange "$message"
+    sleep 1
+}
+
+run_commands() {
+    local commands="$*"
+
+    if eval "$commands"; then
+        sleep 1
+        echo ""
+        show_green "成功"
+        echo ""
+    else
+        sleep 1
+        echo ""
+        show_red "失败"
+        echo ""
+    fi
+}
+
+run_commands_info() {
+    local commands="$*"
+
+    if eval "$commands"; then
+        sleep 1
+        echo ""
+        show_green "成功"
+        echo ""
+    else
+        sleep 1
+        echo ""
+        show_blue "未找到"
+        echo ""
+    fi
+}
+
+run_node_command() {
+    local commands="$*"
+
+    if eval "$commands"; then
+        sleep 1
+        show_green "节点已启动!"
+        echo
+    else
+        show_red "节点未启动!"
+        echo
+    fi
+}
+
+
+show_orange " .__   __. .___________. __  ___  ____ " && sleep 0.2
+show_orange " |  \ |  | |           ||  |/  / |___ \ " && sleep 0.2
+show_orange " |   \|  |  ---|  |---- |  '  /    __) | " && sleep 0.2
+show_orange " |  .    |     |  |     |    <    |__ < " && sleep 0.2
+show_orange " |  |\   |     |  |     |  .  \   ___) | " && sleep 0.2
+show_orange " |__| \__|     |__|     |__|\__\ |____/ " && sleep 0.2
+echo
+sleep 1
+
+while true; do
+    show_green "----- 主菜单 -----"
+    echo "1. 安装"
+    echo "2. 日志"
+    echo "3. 启动/重启/停止"
+    echo "4. 删除"
+    echo "5. 节点数据"
+    echo "6. 退出"
+    echo ""
+    read -p "请选择一个选项: " option
+
+    case $option in
+        1)
+            process_notification "开始安装..."
+            echo
+
+            # Update packages
+            process_notification "更新包..."
+            run_commands "sudo apt update && sudo apt upgrade -y && apt install tar net-tools"
+
+            process_notification "创建文件夹..."
+            run_commands "mkdir -p $HOME/network3 && cd $HOME/network3"
+
+            process_notification "下载..."
+            run_commands "wget -O ubuntu-node-latest.tar https://network3.io/ubuntu-node-v2.1.0.tar"
+
+            process_notification "解压..."
+            run_commands "tar -xvf ubuntu-node-latest.tar && rm ubuntu-node-latest.tar"
+
+            echo
+            show_green "----- 完成! ------"
+            echo
+            ;;
+        2)
+            # Logs
+            MY_IP=$(hostname -I | awk '{print $1}')
+            process_notification "点击 -> https://account.network3.ai/main?o=$MY_IP:8080"
+            ;;
+        3)
+            echo
+            show_orange "请选择"
+            echo
+            echo "1. 启动"
+            echo "2. 停止"
+            echo
+            read -p "请选择一个选项: " option
+                case $option in
+                    1)
+                        # Start
+                        process_notification "启动中..."
+                        run_node_command "cd $HOME/network3/ubuntu-node/ && ./manager.sh up"
+                        echo
+                        ;;
+                    2)
+                        process_notification "停止中..."
+                        run_commands_info "cd $HOME/network3/ubuntu-node/ && ./manager.sh down"
+                        echo
+                        ;;
+                    *)
+                        incorrect_option
+                        ;;
+                esac
+                ;;
+        4)
+            # Delete
+            process_notification "删除节点"
+            echo
+            process_notification "停止中..."
+            run_commands_info "cd $HOME/network3/ubuntu-node/ && ./manager.sh down"
+            echo
+            process_notification "删除文件..."
+            run_commands "rm -rvf $HOME/network3"
+            echo
+            show_green "--- 节点已删除 ---"
+            echo
+            ;;
+        5)
+            # node data
+            process_notification "查找中..."
+            show_green "您的节点密钥"
+            run_commands_info "cd $HOME/network3/ubuntu-node/ && ./manager.sh key"
+            ;;
+        6)
+            exit_script
+            ;;
+        *)
+            incorrect_option
+            ;;
+    esac
+done
