@@ -105,7 +105,8 @@ while true; do
     echo "5. 节点数据"
     echo "6. 退出"
     echo ""
-    read -p "请选择一个选项: " option
+    echo -n "请选择一个选项: "
+    read option
     echo "你选择了: $option"  # 调试信息
 
     case $option in
@@ -142,7 +143,8 @@ while true; do
             echo "1. 启动"
             echo "2. 停止"
             echo
-            read -p "请选择一个选项: " option
+            echo -n "请选择一个选项: "
+            read option
             echo "你选择了: $option"  # 调试信息
             case $option in
                 1)
