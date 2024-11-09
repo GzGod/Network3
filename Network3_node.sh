@@ -1,5 +1,7 @@
 #!/bin/bash
 
+stty sane
+
 tput reset
 tput civis
 
@@ -23,8 +25,8 @@ show_red() {
 
 exit_script() {
     show_red "脚本已停止"
-        echo ""
-        exit 0
+    echo ""
+    exit 0
 }
 
 incorrect_option () {
@@ -104,6 +106,7 @@ while true; do
     echo "6. 退出"
     echo ""
     read -p "请选择一个选项: " option
+    echo "你选择了: $option"  # 调试信息
 
     case $option in
         1)
@@ -140,23 +143,24 @@ while true; do
             echo "2. 停止"
             echo
             read -p "请选择一个选项: " option
-                case $option in
-                    1)
-                        # Start
-                        process_notification "启动中..."
-                        run_node_command "cd $HOME/network3/ubuntu-node/ && ./manager.sh up"
-                        echo
-                        ;;
-                    2)
-                        process_notification "停止中..."
-                        run_commands_info "cd $HOME/network3/ubuntu-node/ && ./manager.sh down"
-                        echo
-                        ;;
-                    *)
-                        incorrect_option
-                        ;;
-                esac
-                ;;
+            echo "你选择了: $option"  # 调试信息
+            case $option in
+                1)
+                    # Start
+                    process_notification "启动中..."
+                    run_node_command "cd $HOME/network3/ubuntu-node/ && ./manager.sh up"
+                    echo
+                    ;;
+                2)
+                    process_notification "停止中..."
+                    run_commands_info "cd $HOME/network3/ubuntu-node/ && ./manager.sh down"
+                    echo
+                    ;;
+                *)
+                    incorrect_option
+                    ;;
+            esac
+            ;;
         4)
             # Delete
             process_notification "删除节点"
